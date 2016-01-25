@@ -111,6 +111,6 @@ struct Router: HTTPRequestHandler {
 				return route.handler(request, m)
 			}
 		}
-		return Future<HTTPResponse>(immediate: HTTPResponse(code: HTTPResponse.Code.NotFound, headers: ["Content-Type": "text/plain"], content:"404 Not Found"))
+		return Future(immediate: HTTPResponse.NotFound(["Content-Type": "text/plain"], content:"404 Not Found"))
 	}
 }
