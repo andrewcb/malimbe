@@ -15,7 +15,7 @@ public struct HTTPResponse {
 		case PermanentRedirect = 308
 
 		case BadRequest = 400
-		case Unauthorized = 401
+		case NotAuthorized = 401
 		case PaymentRequired = 402
 		case Forbidden = 403
 		case NotFound = 404
@@ -49,6 +49,11 @@ public struct HTTPResponse {
 		self.content = [UInt8](content.utf8)
 		self.headers["Content-Length"] = "\(self.content.count)"
 	}
+
+	static func OK(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
+	static func NotAuthorized(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
+	static func Forbidden(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
+	static func NotFound(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
 
 }
 

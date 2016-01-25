@@ -26,7 +26,6 @@ public class HTTPServer: TCPServer {
 		var ln: String
 		repeat {
 			ln = try socket.readln() ?? ""
-			print(" hdrLine: `\(ln)'")
 			let spl = ln.split(":", maxSplit: 1)
 			if spl.count == 2 {
 				result[spl[0].lowercaseString] = spl[1].trim { $0  != " " }
@@ -42,7 +41,6 @@ public class HTTPServer: TCPServer {
 			return nil
 		}
 		do {
-			print("statusLine = \(statusLine)")
 			let tokens = statusLine.split(" ", maxSplit: 2)
 			if tokens.count < 3 {
 				return nil
