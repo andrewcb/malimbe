@@ -1,4 +1,5 @@
 import Foundation
+import aserver
 
 struct DummyHandler: HTTPRequestHandler {
 	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {

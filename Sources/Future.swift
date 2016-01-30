@@ -36,9 +36,9 @@ available. It can be instantiated with a value or a block of code, to execute as
 producing this value. 
  */
 
-class Future<T> {
+public class Future<T> {
     typealias Element = T
-    typealias SuccessCallback = T -> ()
+    public typealias SuccessCallback = T -> ()
 
     var state: T?
     var successCallbacks: [SuccessCallback] = []
@@ -63,7 +63,7 @@ class Future<T> {
 
     /** initialise a Future with an immediately available value; slightly
         more efficient than firing off a block. */
-    init(immediate: T) {
+    public init(immediate: T) {
         sem_init(&valueSemaphore, 0, 0)
         self._complete(immediate)
     }
@@ -81,7 +81,7 @@ class Future<T> {
     }
 
     /** Adds a callback to be called on successful completion. */
-    func onSuccess(action: SuccessCallback) {
+    public func onSuccess(action: SuccessCallback) {
         successCallbacks.append(action)
         if let value = self.state {
             action(value)
@@ -89,7 +89,7 @@ class Future<T> {
     }
 
     /** map: creates a Future of type U from a Promise of type T and a T->U */
-    func map<U>(transform: T->U) -> Future<U> {
+    public func map<U>(transform: T->U) -> Future<U> {
         let r = Promise<U>()
         self.onSuccess {
             r.complete(transform($0))
@@ -98,7 +98,7 @@ class Future<T> {
     }
 
     /** flatMap: allows the chaining of futures */
-    func flatMap<U>(transform: T->Future<U>) -> Future<U> {
+    public func flatMap<U>(transform: T->Future<U>) -> Future<U> {
         let r = Promise<U>()
         self.onSuccess { (v1: T) -> () in
             let p2 = transform(v1)
@@ -110,7 +110,7 @@ class Future<T> {
     }
 
     /** wait for a maximum amount of time for the Future to be fulfilled. */
-    func await(time: NSTimeInterval) -> T? {
+    public func await(time: NSTimeInterval) -> T? {
         let nsec = Int(time * 1000000000)
         var ts: timespec = timespec()
         clock_gettime(CLOCK_REALTIME, &ts)
@@ -121,6 +121,8 @@ class Future<T> {
 
         return self.state
     }
+
+    //class func immediate<T>(_ val:T)
 }
 
 /**

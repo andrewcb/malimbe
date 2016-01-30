@@ -1,6 +1,6 @@
 import Foundation
 
-struct RoutingPath {
+public struct RoutingPath {
 	enum Segment {
 		// a literal piece of text between /s to match
 		case Literal(text: String)
@@ -67,22 +67,22 @@ struct RoutingPath {
 }
 
 
-struct Router: HTTPRequestHandler {
-	struct Route {
-		enum Method : String {
+public struct Router: HTTPRequestHandler {
+	public struct Route {
+		public enum Method : String {
 			case Get = "GET"
 			case Post = "POST"
 			case Put = "PUT"
 			case Delete = "DELETE"
 		}
 
-		typealias Handler = (HTTPRequest, [String:String]) -> Future<HTTPResponse>
+		public typealias Handler = (HTTPRequest, [String:String]) -> Future<HTTPResponse>
 
-		let method: Method
-		let path: RoutingPath
-		let handler: Handler
+		public let method: Method
+		public let path: RoutingPath
+		public let handler: Handler
 
-		init(method:Method, path:String, handler:Handler) {
+		public init(method:Method, path:String, handler:Handler) {
 			self.method = method
 			self.path = RoutingPath(path:path)
 			self.handler = handler
@@ -94,18 +94,18 @@ struct Router: HTTPRequestHandler {
 		}
 	}
 
-	static func Get(path:String, handler:Route.Handler) -> Route {return Route(method:.Get, path:path, handler:handler)}
-	static func Post(path:String, handler:Route.Handler) -> Route {return Route(method:.Post, path:path, handler:handler)}
-	static func Put(path:String, handler:Route.Handler) -> Route {return Route(method:.Put, path:path, handler:handler)}
-	static func Delete(path:String, handler:Route.Handler) -> Route {return Route(method:.Delete, path:path, handler:handler)}
+	public static func Get(path:String, handler:Route.Handler) -> Route {return Route(method:.Get, path:path, handler:handler)}
+	public static func Post(path:String, handler:Route.Handler) -> Route {return Route(method:.Post, path:path, handler:handler)}
+	public static func Put(path:String, handler:Route.Handler) -> Route {return Route(method:.Put, path:path, handler:handler)}
+	public static func Delete(path:String, handler:Route.Handler) -> Route {return Route(method:.Delete, path:path, handler:handler)}
 
 	let routes: [Route]
 
-	init(routes: [Route]) {
+	public init(routes: [Route]) {
 		self.routes = routes
 	}
 
-	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
+	public func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
 		for route in routes {
 			if let m = route.matches(request) {
 				return route.handler(request, m)

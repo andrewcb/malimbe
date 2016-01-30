@@ -50,10 +50,10 @@ public struct HTTPResponse {
 		self.headers["Content-Length"] = "\(self.content.count)"
 	}
 
-	static func OK(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
-	static func NotAuthorized(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
-	static func Forbidden(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
-	static func NotFound(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
+	public static func OK(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
+	public static func NotAuthorized(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
+	public static func Forbidden(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
+	public static func NotFound(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
 
 }
 

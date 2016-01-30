@@ -3,7 +3,7 @@ public class HTTPServer: TCPServer {
     /** A handler, or a chain of handlers calling each other, a la WSGI */
 	let handler: HTTPRequestHandler
 
-	init(handler: HTTPRequestHandler) {
+	public init(handler: HTTPRequestHandler) {
 		self.handler = handler
 	}
 
@@ -36,7 +36,7 @@ public class HTTPServer: TCPServer {
 	}
 
 
-	func getHTTPRequest(socket: Socket) -> HTTPRequest? {
+	private func getHTTPRequest(socket: Socket) -> HTTPRequest? {
 		guard let statusLine = try? socket.readln() else {
 			return nil
 		}

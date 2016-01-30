@@ -1,10 +1,10 @@
 
 
-struct HTTPRequest {
-	let method: String
-	let path: String
-	let headers: [String:String]
-	let queryArgs: [String:String]
+public struct HTTPRequest {
+	public let method: String
+	public let path: String
+	public let headers: [String:String]
+	public let queryArgs: [String:String]
 
 	init(method: String, rawPath: String, headers: [String:String]) {
 		self.method = method

@@ -1,15 +1,15 @@
-protocol AuthenticationSource {
+public protocol AuthenticationSource {
 	func isValid(username: String, password: String) -> Bool
 }
 
-struct BasicAuthentication: HTTPRequestHandler {
+public struct BasicAuthentication: HTTPRequestHandler {
 
 	let realm: String
 	let paths: [String]
 	let source: AuthenticationSource
 	let next: HTTPRequestHandler
 
-	init(realm:String, paths: [String], source: AuthenticationSource, next: HTTPRequestHandler) {
+	public init(realm:String, paths: [String], source: AuthenticationSource, next: HTTPRequestHandler) {
 		self.realm = realm
 		self.paths = paths
 		self.source = source
@@ -24,7 +24,7 @@ struct BasicAuthentication: HTTPRequestHandler {
 		return request.basicAuthCredentials.flatMap { self.source.isValid($0.0, password:$0.1) } ?? false
 	}
 
-	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
+	public func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
 		if self.needAuthentication(request) && !self.haveAuthentication(request) {
 			// 403 it -- FIXME
 			return Future<HTTPResponse>(immediate: HTTPResponse.NotAuthorized([

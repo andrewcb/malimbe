@@ -1,3 +1,3 @@
-protocol HTTPRequestHandler {
+public protocol HTTPRequestHandler {
 	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse>
 }
