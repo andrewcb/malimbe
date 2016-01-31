@@ -54,7 +54,7 @@ public struct HTTPResponse {
 	public static func NotAuthorized(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
 	public static func Forbidden(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
 	public static func NotFound(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
-
+	public static func Redirect(url: String) -> HTTPResponse { return HTTPResponse(code:Code.SeeOther, headers:["Location": url], content:"")}
 }
 
 extension Socket {

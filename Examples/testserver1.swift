@@ -36,11 +36,16 @@ func adminPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTP
 	return Future(immediate: HTTPResponse.OK(["Content-Type": "text/plain"], content:"This would be the admin page"))
 }
 
+func rootPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
+	return Future(immediate: HTTPResponse.OK(["Content-Type": "text/plain"], content:"This is the root page"))
+}
+
 let router = Router(routes:[
 	Router.Get("/info/",     handler:displayInfoHandler),
 	Router.Get("/items/",    handler:itemsPageHandler),
 	Router.Get("/items/:id", handler:itemPageHandler),
-	Router.Get("/admin/",    handler:adminPageHandler)
+	Router.Get("/admin/",    handler:adminPageHandler),
+	Router.Get("/",          handler:rootPageHandler)
 ])
 
 struct DummyAuthSource : AuthenticationSource {
