@@ -11,12 +11,18 @@ struct GuestbookEntry {
 	let text: String
 }
 
+extension GuestbookEntry {
+	var asHTML: String  {
+		return "<p class=guestbookitem><span class=\"itemtop\"><b>\(self.name)</b> says:</span><br/>\(self.text)</p>"
+	}
+}
+
 var guestbookItems:[GuestbookEntry] = [GuestbookEntry(name: "Bob", text:"Hello")]
 
 func displayInfoHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
 	let hdrs = request.headers.map { "<li>\($0.0) = \($0.1)</li>" }.joinWithSeparator(" ")
 	let queryArgs = request.queryArgs.map { "<li>\($0.0) = \($0.1)</li>" }.joinWithSeparator(" ")
-	let requestInfo = "Method: <b>\(request.method)</b> Path: <b>\(request.path)</b> <h2>Headers</h2><ul>\(hdrs)</ul> <h2>Query args</h2><ul>\(queryArgs)</ul>"
+	let requestInfo = "Method: <b>\(request.method)</b> Path: <b>\(request.path)</b> <h2>Headers</h2><ul>\(hdrs)</ul><h2>Request body</h2><tt>\(request.contentUTF8)</tt> <h2>Query args</h2><ul>\(queryArgs)</ul>"
 	return Future(immediate: HTTPResponse.OK(
 		["Content-Type": "text/html"],
 		content: "<html><head><title>Information</title></head><body>\(requestInfo)</body></html>"
@@ -27,11 +33,11 @@ func rootPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPR
 	let head = "<head><title>Guestbook</title></head>"
 	let items: String
 	if guestbookItems.count > 0 {
-		items = "<h2>Guestbook items:</h2>" + ((guestbookItems.map { "<p class=guestbookitem><span class=\"itemtop\"><b>\($0.name)</b>says:</span><br/>\($0.text)</p>" }).joinWithSeparator(""))
+		items = "<h2>Guestbook items:</h2>" + ((guestbookItems.map { $0.asHTML }).joinWithSeparator(""))
 	} else {
 		items = "<p>The guestbook is currently empty.</p>"
 	}
-	let form = "<form action=\"post\"><p>Your name: <input type=text name=\"name\"/></p><p>Your message:<br/><textarea name=text cols=60 rows=4></textarea><br/><input type=\"submit\"/></form>"
+	let form = "<form action=\"post\" method=POST><p>Your name: <input type=text name=\"name\"/></p><p>Your message:<br/><textarea name=text cols=60 rows=4></textarea><br/><input type=\"submit\"/></form>"
 	let body = "<body>\(items)\(form)</body>"
 	return Future(immediate: HTTPResponse.OK(["Content-Type": "text/html"], 
 		content:"<html>\(head)\(body)</html>")
@@ -46,6 +52,7 @@ func postHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPRespo
 }
 
 let router = Router(routes:[
+	Router.Post("/post",     handler:postHandler),
 	Router.Get("/post",      handler:postHandler),
 	Router.Get("/",          handler:rootPageHandler)
 ])

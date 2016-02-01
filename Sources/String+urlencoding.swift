@@ -34,4 +34,13 @@ extension String {
 		}
 		return result
 	}
+
+	/** Decode a query string from a string */
+
+	func decodeQueryString() -> [String:String] {
+		let argtuples = self.split("&", maxSplit: Int.max).map { $0.split("=", maxSplit:1) }.flatMap { 
+			($0.count > 1 ) ? ($0[0].urldecode(), $0[1].urldecode()) : nil
+		}
+		return [String:String](argtuples)
+	}
 }

@@ -46,8 +46,12 @@ public class HTTPServer: TCPServer {
 				return nil
 			}
 			let hdrs = try self.readHeaders(socket)
-			return HTTPRequest(method: tokens[0], rawPath: tokens[1], headers: hdrs)
+			let content = try hdrs["content-length"].flatMap { Int($0) }.flatMap {
+				try socket.readBytes($0)
+			}
+			return HTTPRequest(method: tokens[0], rawPath: tokens[1], headers: hdrs, content: content)
 		} catch {
+			// FIXME: this should probably throw
 			return nil
 		}
 

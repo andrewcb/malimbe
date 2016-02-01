@@ -93,6 +93,14 @@ public struct Socket : Equatable, Hashable {
    		return buf
    	}
 
+   	public func readBytes(count: Int) throws -> [UInt8] {
+   		var buf = [UInt8](count: count+1, repeatedValue: 0)
+   		if recv(self.fd as Int32, &buf, count, 0)  != count {
+   			throw Error.ReadFailed
+   		}
+   		return buf
+   	}
+
    	public func readln() throws -> String {
    		var inb: UInt8 = 0
    		var buf: [UInt8] = []
