@@ -60,7 +60,9 @@ let basicAuthSource = DummyAuthSource(passwords:["admin":"thisissecret"])
 
 let basicAuth = BasicAuthentication(realm: "Test Server", paths:["/admin"], source:basicAuthSource, next:router)
 
-let testserver = HTTPServer(handler: basicAuth)
+let staticFiles = StaticFileRequestHandler(pathPrefix: "/static/", staticDir:"/tmp/", next:basicAuth )
+
+let testserver = HTTPServer(handler: staticFiles)
 
 print("starting...")
 do {

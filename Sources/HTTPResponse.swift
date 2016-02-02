@@ -1,3 +1,64 @@
+/** The actual content a HTTPResponse can send is abstracted into a protocol. 
+This allows, say, large disk files to be handled efficiently (without being 
+sucked into RAM in their entirety) */
+
+import Glibc
+
+protocol HTTPResponseContentSource {
+	var byteCount: Int { get }
+	func writeToSocket(socket: Socket) throws
+}
+
+struct InMemoryContentSource: HTTPResponseContentSource {
+	let content: [UInt8]
+	let byteCount: Int
+	init(content: [UInt8]) {
+		self.content = content
+		self.byteCount = content.count
+	}
+
+	func writeToSocket(socket: Socket) throws {
+		try socket.write(self.content)
+	}
+}
+
+struct LocalFileContentSource: HTTPResponseContentSource {
+	var byteCount: Int
+	var path: String
+
+	public struct ReadError: ErrorType { }
+
+	init?(path:String) {
+		var stb = stat()
+		if stat(path, &stb) != 0 { return nil }
+		self.byteCount = stb.st_size
+		self.path = path
+	}
+
+	func writeToSocket(socket: Socket) throws {
+		let fd = open(self.path, O_RDONLY)
+		guard (fd >= 0) else { throw ReadError() }
+		defer { close(fd) }
+		var remaining = self.byteCount
+		let bufsize = 16384
+
+		func copyBytes(count: Int) throws {
+			var buf = [UInt8](count: count, repeatedValue: 0)
+			if (read(fd, &buf, count) < count) { throw ReadError() }
+			try socket.write(buf)
+		}
+		
+		while remaining > bufsize {
+			try copyBytes(bufsize)
+			remaining -= bufsize
+		}
+		if remaining > 0 {
+			try copyBytes(remaining)
+		}
+
+	}
+}
+
 public struct HTTPResponse {
 	enum Code: Int {
 		case OK = 200
@@ -29,25 +90,35 @@ public struct HTTPResponse {
 		case NotImplemented = 501
 		case BadGateway = 502
 		case ServiceUnavailable = 503
-		}
+	}
 
 	let code: Code
 	var headers: [String:String]
-	let content: [UInt8]
+	let content: HTTPResponseContentSource
 
-	init(code: Code, headers: [String:String], content: [UInt8]) {
+	init(code: Code, headers: [String:String], content: HTTPResponseContentSource) {
 		self.code = code
 		self.headers = headers
 		self.content = content
-		self.headers["Content-Length"] = "\(content.count)"
+		self.headers["Content-Length"] = "\(content.byteCount)"
+	}
+
+	init(code: Code, headers: [String:String], content: [UInt8]) {
+		self.init(code: code, headers:headers, content: InMemoryContentSource(content:content))
 	}
 
 	init(code: Code, headers: [String:String], content: String) {
-		self.code = code
-		self.headers = headers
+		self.init(code: code, headers:headers, content: InMemoryContentSource(content:[UInt8](content.utf8)))
+
 		// TODO: update encoding
-		self.content = [UInt8](content.utf8)
-		self.headers["Content-Length"] = "\(self.content.count)"
+	}
+
+	init?(code: Code, headers: [String:String], filePath: String) {
+		if let src = LocalFileContentSource(path:filePath)  { 
+			self.init(code: code, headers: headers, content: src)
+		} else {
+			return nil
+		}
 	}
 
 	public static func OK(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
@@ -64,6 +135,6 @@ extension Socket {
 			try self.write("\(k): \(v)\r\n")
 		}
 		try self.write("\r\n")
-		try self.write(response.content)
+		try response.content.writeToSocket(self)
 	}
 }

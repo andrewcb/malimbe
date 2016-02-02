@@ -22,4 +22,13 @@ extension String {
 
 		return String(chars[Range(start:start, end:end)])
 	}
+
+	/** If the string starts with a prefix, return the remainder */
+	func remainderFromPrefix(prefix: String) -> String? {
+		if self.hasPrefix(prefix) {
+			return self[self.startIndex.advancedBy(prefix.characters.count)..<self.endIndex]
+		} else {
+			return nil
+		}
+	}
 }
