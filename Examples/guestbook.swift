@@ -13,7 +13,7 @@ struct GuestbookEntry {
 
 extension GuestbookEntry {
 	var asHTML: String  {
-		return "<p class=guestbookitem><span class=\"itemtop\"><b>\(self.name)</b> says:</span><br/>\(self.text)</p>"
+		return "<div class=guestbookitem><span class=\"itemtop\"><b>\(self.name)</b> says:</span><div class=\"itembody\">\(self.text)</div></div>"
 	}
 }
 
@@ -30,7 +30,7 @@ func displayInfoHandler(request: HTTPRequest, args:[String:String]) -> Future<HT
 }
 
 func rootPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
-	let head = "<head><title>Guestbook</title></head>"
+	let head = "<head><title>Guestbook</title><link rel=\"StyleSheet\" href=\"/static/style.css\" type=\"text/css\" media=\"screen\"/></head>"
 	let items: String
 	if guestbookItems.count > 0 {
 		items = "<h2>Guestbook items:</h2>" + ((guestbookItems.map { $0.asHTML }).joinWithSeparator(""))
@@ -57,8 +57,9 @@ let router = Router(routes:[
 	Router.Get("/",          handler:rootPageHandler)
 ])
 
+let staticFiles = StaticFileRequestHandler(pathPrefix: "/static/", staticDir:appRelativePath("GuestbookStatic/"), next:router )
 
-let server = HTTPServer(handler: router)
+let server = HTTPServer(handler: staticFiles)
 
 print("starting...")
 do {

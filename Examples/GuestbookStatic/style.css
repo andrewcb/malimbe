@@ -1,0 +1,28 @@
+body { 
+	background-color: #ffffff; 
+	font-family: sans-serif, helvetica, arial;
+}
+
+div.guestbookitem {
+	padding-bottom: 12pt;
+
+}
+
+div.guestbookitem span.itemtop {
+	font-size: 10pt;
+	background-color: #333;
+	color: white;
+	border-top-right-radius: 6px;
+	padding-right: 8px;
+	border-top-left-radius: 6px;
+	padding-left: 8px;
+}
+
+div.guestbookitem div.itembody {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 2em;
+	border-top: 1px solid #333;
+	border-bottom: 1px dashed #ccc;
+	border-left: 3px solid #eee;
+}

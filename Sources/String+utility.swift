@@ -1,9 +1,11 @@
 
 extension String {
+	/** Return the components of a string split at most a specified number of times */
 	func split(separator: Character, maxSplit: Int) -> [String] {
 		return self.characters.split(separator, maxSplit: maxSplit, allowEmptySlices: false).map { String($0) }
 	}
 
+	/** Return the components of a split string only if it would split an exact number of times; otherwise, nil. */
 	func splitExactly(separator: Character, numSplit: Int) -> [String]? {
 		if (self.characters.count { $0 == separator }) != numSplit { return nil }
 		let r = self.split(separator, maxSplit: numSplit)
