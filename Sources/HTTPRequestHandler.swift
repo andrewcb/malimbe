@@ -1,3 +1,11 @@
+/**
+The protocol that request handlers have to implement. 
+This does not take into account any form of chaining (that is left 
+for the request handlers to implement at initialisation and call 
+time) or routing (which is a higher-level mechanism).
+*/
+
 public protocol HTTPRequestHandler {
-	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse>
+    /** Handle a HTTP request asynchronously, returning the response in a Future. */
+    func handleRequest(request: HTTPRequest) -> Future<HTTPResponse>
 }

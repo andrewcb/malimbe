@@ -7,11 +7,11 @@
 */
 
 public func appRelativePath(path:String) -> String {
-	let argv0 = Process.arguments[0]
+    let argv0 = Process.arguments[0]
 
-	if let appPath = argv0.pathDirectoryName {
-		return "\(appPath)/\(path)"
-	} else {
-		return path
-	}
+    if let appPath = argv0.pathDirectoryName {
+        return "\(appPath)/\(path)"
+    } else {
+        return path
+    }
 }

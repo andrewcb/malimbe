@@ -13,6 +13,7 @@ extension String {
 		return r
 	}
 
+	/** Filter out characters from the string, but only at the start and end */
 	func trim(filter: Character->Bool) -> String {
 		let chars = self.characters
 		var start = chars.indices.startIndex
