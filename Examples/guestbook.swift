@@ -11,9 +11,15 @@ struct GuestbookEntry {
 	let text: String
 }
 
-extension GuestbookEntry {
+extension GuestbookEntry : HTMLRenderable {
 	var asHTML: String  {
-		return "<div class=guestbookitem><span class=\"itemtop\"><b>\(self.name)</b> says:</span><div class=\"itembody\">\(self.text)</div></div>"
+		let topLine: [HTMLRenderable] = [HTMLTag.B(self.name), "says:"]
+		return [
+			HTMLTag.DIV([
+				HTMLTag.SPAN([topLine], class:"itemtop"),
+				HTMLTag.DIV(self.text, class:"itembody")
+			], class:"guestbookitem")
+		].asHTML
 	}
 }
 
@@ -31,14 +37,21 @@ func displayInfoHandler(request: HTTPRequest, args:[String:String]) -> Future<HT
 
 func rootPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
 	let head = "<head><title>Guestbook</title><link rel=\"StyleSheet\" href=\"/static/style.css\" type=\"text/css\" media=\"screen\"/></head>"
-	let items: String
+	//let items: String
+	let items: [HTMLRenderable]
 	if guestbookItems.count > 0 {
-		items = "<h2>Guestbook items:</h2>" + ((guestbookItems.map { $0.asHTML }).joinWithSeparator(""))
+		items = [HTMLTag.H2("Guestbook items:")] + guestbookItems.map { $0 as HTMLRenderable }
 	} else {
-		items = "<p>The guestbook is currently empty.</p>"
+		items = [HTMLTag.P("The guestbook is currently empty.")]
 	}
+	//  Swift's type inference currently doesn't allow array literals to be automatically matched to protocol extensions
+	// let form: HTMLRenderable = HTMLTag.FORM([HTMLRenderable]([
+	// 	HTMLTag.P([HTMLRenderable](arrayLiteral:["Your name:", HTMLTag.INPUT(type:"text", name:"name")])),
+	// 	HTMLTag.P([HTMLRenderable](["Your message:", HTMLTag.BR(), HTMLTag.TEXTAREA([], name:"text", cols:60, rows:4)])),
+	// 	HTMLTag.INPUT(type:"submit")
+	// ]), action:"post", method:"POST")
 	let form = "<form action=\"post\" method=POST><p>Your name: <input type=text name=\"name\"/></p><p>Your message:<br/><textarea name=text cols=60 rows=4></textarea><br/><input type=\"submit\"/></form>"
-	let body = "<body>\(items)\(form)</body>"
+	let body = "<body>\(items.asHTML)\(form)</body>"
 	return Future(immediate: HTTPResponse.OK(["Content-Type": "text/html"], 
 		content:"<html>\(head)\(body)</html>")
 	)
