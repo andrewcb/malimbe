@@ -119,6 +119,9 @@ public struct HTTPResponse {
 
         // TODO: update encoding
     }
+    init(code: Code, headers: [String:String], content: HTMLRenderable) {
+        self.init(code: code, headers: headers, content: content.asHTML)
+    }
 
     init?(code: Code, headers: [String:String], filePath: String) {
         if let src = LocalFileContentSource(path:filePath)  { 
@@ -130,9 +133,13 @@ public struct HTTPResponse {
 
     // Utility functions to quickly create common responses
     public static func OK(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
+    public static func OK(headers: [String:String], content:HTMLRenderable) -> HTTPResponse { return HTTPResponse(code:Code.OK, headers:headers, content:content)}
     public static func NotAuthorized(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
+    public static func NotAuthorized(headers: [String:String], content:HTMLRenderable) -> HTTPResponse { return HTTPResponse(code:Code.NotAuthorized, headers:headers, content:content)}
     public static func Forbidden(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
+    public static func Forbidden(headers: [String:String], content:HTMLRenderable) -> HTTPResponse { return HTTPResponse(code:Code.Forbidden, headers:headers, content:content)}
     public static func NotFound(headers: [String:String], content:String) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
+    public static func NotFound(headers: [String:String], content:HTMLRenderable) -> HTTPResponse { return HTTPResponse(code:Code.NotFound, headers:headers, content:content)}
     public static func Redirect(url: String) -> HTTPResponse { return HTTPResponse(code:Code.SeeOther, headers:["Location": url], content:"")}
 }
 

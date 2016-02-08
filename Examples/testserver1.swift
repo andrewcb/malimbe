@@ -8,16 +8,6 @@ struct DummyHandler: HTTPRequestHandler {
 }
 
 
-func displayInfoHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
-	let hdrs = request.headers.map { "<li>\($0.0) = \($0.1)</li>" }.joinWithSeparator(" ")
-	let queryArgs = request.queryArgs.map { "<li>\($0.0) = \($0.1)</li>" }.joinWithSeparator(" ")
-	let requestInfo = "Method: <b>\(request.method)</b> Path: <b>\(request.path)</b> <h2>Headers</h2><ul>\(hdrs)</ul> <h2>Query args</h2><ul>\(queryArgs)</ul>"
-	return Future(immediate: HTTPResponse.OK(
-		["Content-Type": "text/html"],
-		content: "<html><head><title>Information</title></head><body>\(requestInfo)</body></html>"
-		))
-}
-
 func itemsPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPResponse> {
 	let items = ["foo", "bar", "baz"].map { "<li><a href=\"\($0)\">\($0)</a></li>"}.joinWithSeparator("")
 	return Future(immediate: HTTPResponse.OK(
@@ -41,7 +31,6 @@ func rootPageHandler(request: HTTPRequest, args:[String:String]) -> Future<HTTPR
 }
 
 let router = Router(routes:[
-	Router.Get("/info/",     handler:displayInfoHandler),
 	Router.Get("/items/",    handler:itemsPageHandler),
 	Router.Get("/items/:id", handler:itemPageHandler),
 	Router.Get("/admin/",    handler:adminPageHandler),
@@ -55,14 +44,14 @@ struct DummyAuthSource : AuthenticationSource {
 		return passwords[username].map { $0 == password} ?? false
 	}
 }
-
 let basicAuthSource = DummyAuthSource(passwords:["admin":"thisissecret"])
-
 let basicAuth = BasicAuthentication(realm: "Test Server", paths:["/admin"], source:basicAuthSource, next:router)
 
 let staticFiles = StaticFileRequestHandler(pathPrefix: "/static/", staticDir:"/tmp/", next:basicAuth )
 
-let testserver = HTTPServer(handler: staticFiles)
+let requestDump = HTTPRequestDebugDumpHandler(path: "/info/", next: staticFiles)
+
+let testserver = HTTPServer(handler: requestDump)
 
 print("starting...")
 do {
