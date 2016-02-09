@@ -3,16 +3,6 @@
  * Licenced under the Apache Licence.
  */
 
-/*extension Dictionary { // remove this when done
-  
-    init<S: SequenceType where S.Generator.Element == Element>(_ seq: S) {
-        self.init()
-        for (k,v) in seq {
-            self[k] = v
-        }
-    }
-}*/
-
 /* Helpers for generating HTML; includes the HTMLRenderable protocol, 
    and a DSL for emitting HTML tags in Swift code.
 */
@@ -191,24 +181,3 @@ struct HTMLLiteral: HTMLRenderable {
     init(_ value: String) { self.value = value }
     var asHTML: String { return self.value }
 }
-
-
-/*let a: [Any] = [ "Hello<> world", HTMLTag(tag:"a", attr:["href":"blah"], content:"hello")]
-
-print (a.asHTML)
-
-let lit = HTMLLiteral("<marquee>Hello</marquee>")
-print("literal = \(lit.asHTML)")
-
-let arr: [HTMLRenderable] = [HTMLTag.P("hi"), "hello", HTMLLiteral("<marquee>Hello</marquee>")]
-print("array = \(arr.asHTML)")
-
-let div = HTMLTag.DIV(
-    HTMLTag.P("Hello world", class:"first"),
-    HTMLTag.P("This is the second paragraph"),
-    HTMLTag(tag:"br" ),
-    HTMLTag(tag:"br", content:"" ),
-    //lit,
-    HTMLLiteral("<marquee>This is a literal</marquee>")
-    , id:"body")
-print(div.asHTML)*/
