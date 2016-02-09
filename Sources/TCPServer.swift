@@ -1,3 +1,8 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
 import Foundation
 
 //#if os(Linux)
@@ -21,6 +26,7 @@ public class TCPServer {
         self.socketsLock.unlock()
     }
 
+    /** Start the server. */
     public func start(port: in_port_t) throws {
         stop()
         inSocket = try Socket(port: port)
@@ -39,6 +45,7 @@ public class TCPServer {
         }
     }
 
+    /** Shut down the server. */
     public func stop() {
         self.inSocket.closeSocket()
         lock {
@@ -49,6 +56,7 @@ public class TCPServer {
         }
     }
 
+    /** Handle an incoming connection; override in subclasses */
     public func handleConnection(socket: Socket) {
     }
 }

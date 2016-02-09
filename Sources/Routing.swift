@@ -1,3 +1,10 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+ /* The path routing system. This consists of the Router request handler, and the RoutingPath structure. */
+
 import Foundation
 
 public struct RoutingPath {

@@ -1,3 +1,10 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+// Base64 encoding/decoding for String
+
 extension String {
 
     /** Attempt to decode a Base64 input, creating a string if valid. */

@@ -1,9 +1,13 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+
 /**
  A HTTPRequestHandler that handles requests for a specific path and 
  displays the request's details in HTML form, for debugging purposes.
 */
-
-
 public struct HTTPRequestDebugDumpHandler : HTTPRequestHandler {
     let path: String
     let next: HTTPRequestHandler

@@ -1,3 +1,10 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+// URL decoding on String
+
 extension String {
     private func hexvalue(c: Character) -> Int? {
         let table = "0123456789ABCDEF0123456789abcdef".characters

@@ -1,4 +1,9 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
 
+// Miscellaneous utility methods on String
 extension String {
 	/** Return the components of a string split at most a specified number of times */
 	func split(separator: Character, maxSplit: Int) -> [String] {

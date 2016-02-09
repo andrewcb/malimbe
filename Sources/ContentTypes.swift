@@ -1,3 +1,8 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
 /** Determine the most probable MIME Content-Type for a pathname, from its suffix.
  - parameter name: The pathname
  - returns: the MIME type string; if none is found, this will be the default fallback type for binary data.

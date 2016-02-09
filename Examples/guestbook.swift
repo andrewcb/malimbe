@@ -4,7 +4,7 @@
 */
 
 import Foundation
-import aserver
+import malimbe
 
 struct GuestbookEntry {
 	let name: String

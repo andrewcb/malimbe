@@ -1,3 +1,8 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
 /*extension Dictionary { // remove this when done
   
     init<S: SequenceType where S.Generator.Element == Element>(_ seq: S) {
@@ -7,7 +12,10 @@
         }
     }
 }*/
-// Utility methods for HTML
+
+/* Helpers for generating HTML; includes the HTMLRenderable protocol, 
+   and a DSL for emitting HTML tags in Swift code.
+*/
 
 extension String {
     /** Escape all the HTML special characters (i.e., </>) in the string. */
@@ -27,6 +35,7 @@ extension String {
 
 /** The HTMLRenderable protocol, used for objects (including tags) which produce HTML markup */
 public protocol HTMLRenderable {
+    /** Return a HTML representation of this object as a String */
     var asHTML: String { get }
 }
 
@@ -40,27 +49,29 @@ extension Array : HTMLRenderable {
     /* Unfortunately, Swift as of 2.2 does not allow protocol-conformance 
     extensions to be constrained by subtype, so rather than this being illegal 
     for arrays of non-HTMLRenderable types, it simply will skip the invalid types. 
-    Hopefully future versions of Swift will fix this. 
-    */
+    Hopefully future versions of Swift will fix this. */
     public var asHTML: String { return self.flatMap { ($0 as? HTMLRenderable)?.asHTML }.joinWithSeparator(" ") }
 }
 
+/** A lightweight class representing a HTML tag.  */
 public struct HTMLTag: HTMLRenderable {
     let tag: String
     let attr: [String:String]
     let content: HTMLRenderable?
 
+    /** Construct a HTMLTag
+     - parameter tag: the name of the HTML tag
+     - parameter attr: A Dictionary of tag attributes and their values
+     - parameter content: The content of the tag, i.e., what goes between opening and closing tags.  If this is nil, the tag closes itself. */
     public init(tag:String, attr: [String:String] = [:], content:HTMLRenderable? = nil) {
         self.tag = tag
         self.attr = attr
         self.content = content
     }
 
-    init(tag:String, attrList: [(String, String?)], content:HTMLRenderable? = nil) {
-        let presentParams: [(String,String)] = attrList.flatMap { (a, b) in b.map { (a, $0) } }
-        let paramDict: [String:String] = [String:String](presentParams)
-        self.init(tag: tag, attr: paramDict, content: content)
-    }
+    /* Construct tags from lists of tuples with possibly empty values; this 
+       method exists to allow tag-specific helper methods to have optional
+       keyword arguments.  */
 
     init(tag:String, attrList: [(String,String?)], content:HTMLRenderable...) {
         let presentParams: [(String,String)] = attrList.flatMap { (a, b) in b.map { (a, $0) } }
@@ -70,10 +81,7 @@ public struct HTMLTag: HTMLRenderable {
         case 1: self.init(tag:tag, attr:paramDict, content: content[0])
         default: let c: [HTMLRenderable] = content
             self.init(tag:tag, attr:paramDict, content: c)
-            
         }
-        //self.init(tag: tag, attr: paramDict, content: content)
-
     }
 
     public var asHTML: String {

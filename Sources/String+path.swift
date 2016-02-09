@@ -1,4 +1,10 @@
-/* POSIX path manipulations */
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+
+/* POSIX path manipulations, on strings */
 
 extension String {
     /** return the base name of a file  */

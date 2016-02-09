@@ -1,3 +1,10 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+ /* A simple implementation of Futures and Promises, largely influenced by Scala Futures */
+
 import Foundation
 import NSLinux
 import Glibc

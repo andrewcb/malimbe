@@ -1,3 +1,9 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+
 /**  Middleware to serve static files from under a specific directory to under a specific path.
 */
 

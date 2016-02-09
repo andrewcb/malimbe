@@ -1,5 +1,11 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+
 /**
-The protocol that request handlers have to implement. 
+HTTPRequestHandler: the protocol that request handlers have to implement. 
 This does not take into account any form of chaining (that is left 
 for the request handlers to implement at initialisation and call 
 time) or routing (which is a higher-level mechanism).

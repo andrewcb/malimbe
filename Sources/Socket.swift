@@ -1,3 +1,7 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
 
 #if os(Linux)
     import Glibc

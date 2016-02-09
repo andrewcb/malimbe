@@ -1,3 +1,7 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
 
 /**
 A structure representing an incoming HTTP request. This is what request handlers see.

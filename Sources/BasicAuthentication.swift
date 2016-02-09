@@ -1,12 +1,18 @@
+/* Malimbe - a server-side web framework for Swift
+ * https://github.com/andrewcb/malimbe/ 
+ * Licenced under the Apache Licence.
+ */
+
+
+/** A protocol implementing a source of authentication information. Implement this to validate user log-ins. */
 public protocol AuthenticationSource {
+    /** Returns whether a (username,password) combination is valid. */
     func isValid(username: String, password: String) -> Bool
 }
 
 /**
  HTTP Basic Authentication handler middleware. 
- - parameter paths: an array of path prefixes which are to require authentication
- - parameter source: an AuthenticationSource used to validate username/password pairs
- - parameter next: the next request handler to chain to when a request either is authenticated or does not require authentication
+
  */
 public struct BasicAuthentication: HTTPRequestHandler {
 
@@ -15,6 +21,12 @@ public struct BasicAuthentication: HTTPRequestHandler {
     let source: AuthenticationSource
     let next: HTTPRequestHandler
 
+    /**
+    - parameter realm: The name of the Basic Authentication realm
+    - parameter paths: an array of path prefixes which are to require authentication
+    - parameter source: an AuthenticationSource used to validate username/password pairs
+    - parameter next: the next request handler to chain to when a request either is authenticated or does not require authentication
+     */
     public init(realm:String, paths: [String], source: AuthenticationSource, next: HTTPRequestHandler) {
         self.realm = realm
         self.paths = paths
@@ -32,11 +44,10 @@ public struct BasicAuthentication: HTTPRequestHandler {
 
     public func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
         if self.needAuthentication(request) && !self.haveAuthentication(request) {
-            // 403 it -- FIXME
             return Future<HTTPResponse>(immediate: HTTPResponse.NotAuthorized([
                 "Content-Type": "text/plain",
                 "WWW-Authenticate": "Basic realm=\"\(self.realm)\""
-                ], content:"Hello world"))
+                ], content:"Please sign in"))
         } else {
             return self.next.handleRequest(request)
         }

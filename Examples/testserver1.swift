@@ -1,5 +1,5 @@
 import Foundation
-import aserver
+import malimbe
 
 struct DummyHandler: HTTPRequestHandler {
 	func handleRequest(request: HTTPRequest) -> Future<HTTPResponse> {
