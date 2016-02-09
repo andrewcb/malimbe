@@ -31,7 +31,7 @@ let router = Router(routes:[
 
 ```
 
-- ***StaticFileRequestHandler**: This can serve static files from a directory (or tree of directories) under a path on the server. 
+- **StaticFileRequestHandler**: This can serve static files from a directory (or tree of directories) under a path on the server. 
 
 ## Building instructions
 
