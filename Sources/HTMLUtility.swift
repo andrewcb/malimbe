@@ -7,22 +7,6 @@
    and a DSL for emitting HTML tags in Swift code.
 */
 
-extension String {
-    /** Escape all the HTML special characters (i.e., </>) in the string. */
-    var HTMLQuote: String {
-        var result: String = ""
-
-        for ch in self.characters {
-            switch(ch) {
-                case "<": result.appendContentsOf("&lt;")
-                case ">": result.appendContentsOf("&gt;")
-                default: result.append(ch)
-            }
-        }
-        return result
-    }
-}
-
 /** The HTMLRenderable protocol, used for objects (including tags) which produce HTML markup */
 public protocol HTMLRenderable {
     /** Return a HTML representation of this object as a String */
