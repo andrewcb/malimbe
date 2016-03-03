@@ -128,8 +128,6 @@ public class Future<T> {
 
         return self.state
     }
-
-    //class func immediate<T>(_ val:T)
 }
 
 /**
